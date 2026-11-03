@@ -65,6 +65,7 @@ body{
 .expli{flex:1;min-height:0;margin-top:18px;display:flex;flex-direction:column;gap:10px}
 .expli p{flex:1;min-height:0;overflow-y:auto;font-size:14px;line-height:1.45;color:#e8dcc4;background:#0005;border-radius:12px;padding:10px 12px;box-shadow:inset 0 0 0 1px #5d4a6e}
 .expli p:empty{visibility:hidden}
+.encourage{display:block;font-size:21px;line-height:1.25;font-weight:900;margin-bottom:8px;text-shadow:0 2px 0 #0008}
 .expli .btn{flex:none}
 .cache{visibility:hidden}
 /* Fin */
@@ -83,12 +84,14 @@ body{
 <script src="questions/pp2.js"></script>
 <script src="questions/crt.js"></script>
 <script src="questions/complements.js"></script>
+<script src="questions/tableaux.js"></script>
 <script>
 const THEMES = {
   DPG: 'Droit pénal général',
   DPS: 'Droit pénal spécial',
   PP: 'Procédure pénale',
   CRT: 'Compte-rendu et méthodologie',
+  ART: 'Tableau des articles',
 };
 const JOUEURS = {
   Picpic: [
@@ -245,7 +248,7 @@ function question() {
     });
     const zone = app.querySelector('.expli');
     const titre = c.ok ? (JOUEURS[joueur] ? tire(JOUEURS[joueur]) : 'Bonne réponse.') : 'Raté.';
-    zone.querySelector('p').innerHTML = `<strong style="color:${c.ok ? '#8fe08f' : '#ff9a90'}">${echappe(titre)}</strong><br>${echappe(expli || '')}`;
+    zone.querySelector('p').innerHTML = `<strong class="encourage" style="color:${c.ok ? '#8fe08f' : '#ff9a90'}">${echappe(titre)}</strong>${echappe(expli || '')}`;
     zone.classList.remove('cache');
     app.querySelector('.compteur:last-child').textContent = '✔ ' + partie.bons;
   }));
