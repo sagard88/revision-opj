@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#150e1f">
+<title>Révision OPJ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#09050d;--bronze:#8a6a3c;--bronze-light:#c9a45c;--accent:#e0a83c;
+  --ok:#4caf50;--ko:#d9443a;
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#f3ead8;
+  background:var(--grain),radial-gradient(ellipse at 50% 0%,#3a2a52 0%,#1a1225 55%,#0d0814 100%);
+  background-attachment:fixed;overflow:hidden;
+}
+#app{height:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+.titre{font-family:'Cinzel',Georgia,serif;font-weight:900;letter-spacing:.04em;text-align:center;color:var(--bronze-light);text-shadow:0 2px 0 var(--ink),0 0 18px #c9a45c55}
+.panel{position:relative;border-radius:22px;background:var(--grain),linear-gradient(180deg,#312443 0%,#1e152b 55%,#150e1f 100%);
+  box-shadow:0 0 0 2px var(--ink),0 0 0 3px color-mix(in srgb,var(--bronze) 55%,#fff),0 0 0 5px var(--bronze),0 0 0 7px var(--ink),inset 0 2px 0 #ffffff26,inset 0 -8px 14px #0007,0 12px 22px -8px #000}
+.panel::before{--rivet:radial-gradient(circle,#f1d9a0 0 1.6px,#6a4f24 2px 3px,transparent 3.4px);content:'';position:absolute;inset:7px;pointer-events:none;
+  background:var(--rivet) 0 0/8px 8px no-repeat,var(--rivet) 100% 0/8px 8px no-repeat,var(--rivet) 0 100%/8px 8px no-repeat,var(--rivet) 100% 100%/8px 8px no-repeat}
+.btn{--btn:var(--accent);--txt:#1c1005;position:relative;display:flex;align-items:center;justify-content:center;gap:.5rem;border:0;border-radius:16px;font:inherit;font-weight:800;
+  color:var(--txt);text-shadow:0 1px 0 #ffffff66;cursor:pointer;padding:12px 14px;text-align:center;line-height:1.2;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--btn) 50%,#fff) 0%,var(--btn) 46%,color-mix(in srgb,var(--btn) 76%,#000) 100%);
+  box-shadow:0 0 0 2px var(--ink),inset 0 2px 0 #ffffffaa,inset 0 -4px 0 color-mix(in srgb,var(--btn) 52%,#000),0 6px 0 var(--ink),0 12px 16px -6px color-mix(in srgb,var(--btn) 55%,#000);
+  transition:transform 80ms,box-shadow 80ms,opacity 150ms}
+.btn::after{content:'';position:absolute;inset:3px 5px 52% 5px;border-radius:12px 12px 14px 14px;background:linear-gradient(180deg,#ffffff40,#ffffff08);pointer-events:none}
+.btn:active:not(:disabled){transform:translateY(4px) scale(.97);box-shadow:0 0 0 2px var(--ink),inset 0 2px 0 #ffffff88,0 2px 0 var(--ink)}
+.btn:disabled{cursor:default}
+.stone{--btn:#4b3a6b;--txt:#fff;text-shadow:0 2px 0 #0009}
+.good{--btn:var(--ok);--txt:#fff;text-shadow:0 2px 0 #0008}
+.bad{--btn:var(--ko);--txt:#fff;text-shadow:0 2px 0 #0008}
+.dim{opacity:.35}
+/* Accueil */
+.accueil{flex:1;display:flex;flex-direction:column;gap:14px;overflow-y:auto;padding:6px 8px 12px}
+.accueil h1{font-size:30px;margin-top:8px}
+.sous{text-align:center;color:#d8c9ad;font-size:14px;line-height:1.5}
+.choix{display:grid;gap:14px;margin-top:6px}
+.choix .btn{flex-direction:column;padding:14px}
+.choix small{font-weight:600;font-size:12px;opacity:.85}
+.longueur{display:flex;gap:10px;justify-content:center}
+.longueur .btn{flex:1;padding:10px}
+.etiq{font-family:'Cinzel',serif;font-weight:700;text-align:center;color:var(--bronze-light);font-size:14px;margin-top:6px}
+/* Combat */
+.haut{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.haut .btn{padding:8px 12px;font-size:14px}
+.compteur{font-family:'Cinzel',serif;font-weight:900;color:var(--bronze-light);font-size:16px}
+.barre{height:8px;border-radius:8px;background:#0007;box-shadow:inset 0 0 0 1px #5d4a6e;margin-bottom:16px;overflow:hidden}
+.barre i{display:block;height:100%;background:linear-gradient(90deg,var(--bronze),var(--accent));transition:width .3s}
+.cadre{height:190px;flex:none;padding:18px 20px;display:flex;flex-direction:column;justify-content:center;margin:0 6px 22px}
+.theme{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bronze-light);font-family:'Cinzel',serif;font-weight:700;font-size:11px;
+  padding:3px 10px;border-radius:10px;box-shadow:0 0 0 1.5px var(--bronze);white-space:nowrap}
+.texte{font-weight:700;text-align:center;line-height:1.3;overflow:hidden}
+.reponses{display:grid;grid-template-rows:repeat(4,1fr);gap:14px;height:300px;flex:none;padding:0 6px}
+.reponses.vf{grid-template-rows:repeat(2,1fr)}
+.reponses .btn{height:100%;overflow:hidden;font-size:15px}
+.reponses.vf .btn{font-size:22px;font-family:'Cinzel',serif}
+.expli{flex:1;min-height:0;margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.expli p{flex:1;min-height:0;overflow-y:auto;font-size:14px;line-height:1.45;color:#e8dcc4;background:#0005;border-radius:12px;padding:10px 12px;box-shadow:inset 0 0 0 1px #5d4a6e}
+.expli p:empty{visibility:hidden}
+.expli .btn{flex:none}
+.cache{visibility:hidden}
+/* Fin */
+.fin{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:0 8px}
+.fin .panel{padding:26px 20px;text-align:center}
+.score{font-family:'Cinzel',serif;font-weight:900;font-size:52px;color:var(--accent);text-shadow:0 3px 0 var(--ink)}
+.fin .sous{margin-top:8px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>window.Q=[];</script>
+<script src="questions/dpg.js"></script>
+<script src="questions/dps.js"></script>
+<script src="questions/pp.js"></script>
+<script src="questions/pp2.js"></script>
+<script src="questions/crt.js"></script>
+<script src="questions/complements.js"></script>
+<script>
+const THEMES = {
+  DPG: 'Droit pénal général',
+  DPS: 'Droit pénal spécial',
+  PP: 'Procédure pénale',
+  CRT: 'Compte-rendu et méthodologie',
+};
+const app = document.getElementById('app');
+let partie = null;
+let longueur = 20;
+try { longueur = +localStorage.getItem('rev-longueur') || 20; } catch (e) {}
+
+const melange = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const echappe = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+function accueil() {
+  const compte = (t) => Q.filter((q) => !t || q[0] === t).length;
+  app.innerHTML = `
+    <div class="accueil">
+      <h1 class="titre">Révision OPJ</h1>
+      <p class="sous">${compte()} questions pour réviser l'examen d'officier de police judiciaire.<br>Une explication après chaque réponse.</p>
+      <div class="etiq">Questions par partie</div>
+      <div class="longueur">${[10, 20, 40].map((n) => `<button class="btn ${n === longueur ? '' : 'stone'}" data-n="${n}">${n}</button>`).join('')}</div>
+      <div class="etiq">Choisis une matière</div>
+      <div class="choix">
+        <button class="btn" data-t="">Tout mélanger<small>${compte()} questions</small></button>
+        ${Object.entries(THEMES).map(([t, nom]) => `<button class="btn stone" data-t="${t}">${nom}<small>${compte(t)} questions</small></button>`).join('')}
+      </div>
+    </div>`;
+  app.querySelectorAll('[data-n]').forEach((b) => (b.onclick = () => { longueur = +b.dataset.n; try { localStorage.setItem('rev-longueur', longueur); } catch (e) {} accueil(); }));
+  app.querySelectorAll('[data-t]').forEach((b) => (b.onclick = () => commencer(b.dataset.t)));
+}
+
+function commencer(theme) {
+  const pool = Q.filter((q) => !theme || q[0] === theme);
+  partie = { theme, liste: melange(pool).slice(0, longueur), i: 0, bons: 0, ratees: [] };
+  question();
+}
+
+function ajusteTexte(el) {
+  let taille = 21;
+  el.style.fontSize = taille + 'px';
+  const max = el.parentElement.clientHeight - 36;
+  while (el.scrollHeight > max && taille > 11) { taille -= 1; el.style.fontSize = taille + 'px'; }
+}
+function ajusteBoutons() {
+  app.querySelectorAll('.reponses:not(.vf) .btn').forEach((b) => {
+    let t = 15; b.style.fontSize = t + 'px';
+    while (b.scrollHeight > b.clientHeight && t > 10) { t -= 1; b.style.fontSize = t + 'px'; }
+  });
+}
+
+function question() {
+  const q = partie.liste[partie.i];
+  const [theme, , texte, rep, expli] = q;
+  const vf = typeof rep === 'boolean';
+  const choix = vf ? [{ t: 'Vrai', ok: rep === true }, { t: 'Faux', ok: rep === false }]
+                   : melange(rep.map((t, k) => ({ t, ok: k === 0 })));
+  const n = partie.liste.length;
+  app.innerHTML = `
+    <div class="haut">
+      <button class="btn stone" id="quitter">✕ Quitter</button>
+      <span class="compteur">${partie.i + 1} / ${n}</span>
+      <span class="compteur">✔ ${partie.bons}</span>
+    </div>
+    <div class="barre"><i style="width:${(partie.i / n) * 100}%"></i></div>
+    <div class="panel cadre"><span class="theme">${THEMES[theme]}</span><div class="texte">${echappe(texte)}</div></div>
+    <div class="reponses ${vf ? 'vf' : ''}">${choix.map((c, k) => `<button class="btn stone" data-k="${k}">${echappe(c.t)}</button>`).join('')}</div>
+    <div class="expli cache"><p></p><button class="btn" id="suivant">${partie.i + 1 < n ? 'Question suivante' : 'Voir mon score'}</button></div>`;
+  ajusteTexte(app.querySelector('.texte'));
+  ajusteBoutons();
+  app.querySelector('#quitter').onclick = accueil;
+  const boutons = [...app.querySelectorAll('[data-k]')];
+  boutons.forEach((b) => (b.onclick = () => {
+    const c = choix[+b.dataset.k];
+    if (c.ok) partie.bons++; else partie.ratees.push(q);
+    boutons.forEach((x, k) => {
+      x.disabled = true;
+      x.classList.remove('stone');
+      if (choix[k].ok) x.classList.add('good');
+      else if (x === b) x.classList.add('bad');
+      else x.classList.add('stone', 'dim');
+    });
+    const zone = app.querySelector('.expli');
+    zone.querySelector('p').textContent = (c.ok ? 'Bonne réponse. ' : 'Raté. ') + (expli || '');
+    zone.classList.remove('cache');
+    app.querySelector('.compteur:last-child').textContent = '✔ ' + partie.bons;
+  }));
+  app.querySelector('#suivant').onclick = () => { partie.i++; partie.i < n ? question() : fin(); };
+}
+
+function fin() {
+  const n = partie.liste.length, s = partie.bons, pct = Math.round((s / n) * 100);
+  const mot = pct >= 90 ? 'Excellent, tu es prêt.' : pct >= 70 ? 'Bien joué, encore un effort.' : pct >= 50 ? 'C\'est en bonne voie.' : 'À retravailler, courage.';
+  app.innerHTML = `
+    <div class="fin">
+      <h1 class="titre" style="font-size:26px">${partie.theme ? THEMES[partie.theme] : 'Toutes matières'}</h1>
+      <div class="panel"><div class="score">${s} / ${n}</div><p class="sous">${mot}</p></div>
+      ${partie.ratees.length ? `<button class="btn" id="erreurs">Rejouer mes ${partie.ratees.length} erreur${partie.ratees.length > 1 ? 's' : ''}</button>` : ''}
+      <button class="btn ${partie.ratees.length ? 'stone' : ''}" id="rejouer">Nouvelle partie</button>
+      <button class="btn stone" id="menu">Changer de matière</button>
+    </div>`;
+  const e = app.querySelector('#erreurs');
+  if (e) e.onclick = () => { partie = { theme: partie.theme, liste: melange(partie.ratees), i: 0, bons: 0, ratees: [] }; question(); };
+  app.querySelector('#rejouer').onclick = () => commencer(partie.theme);
+  app.querySelector('#menu').onclick = accueil;
+}
+
+accueil();
+</script>
+</body>
+</html>
