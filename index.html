@@ -65,6 +65,7 @@ body{
 .expli{flex:1;min-height:0;margin-top:18px;display:flex;flex-direction:column;gap:10px}
 .expli p{flex:1;min-height:0;overflow-y:auto;font-size:14px;line-height:1.45;color:#e8dcc4;background:#0005;border-radius:12px;padding:10px 12px;box-shadow:inset 0 0 0 1px #5d4a6e}
 .expli p:empty{visibility:hidden}
+.ico{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;font-size:1.5em;line-height:1;flex:none;text-shadow:none;position:relative;z-index:1}
 .encourage{display:block;font-size:21px;line-height:1.25;font-weight:900;margin-bottom:8px;text-shadow:0 2px 0 #0008}
 .expli .btn{flex:none}
 .cache{visibility:hidden}
@@ -151,6 +152,12 @@ const JOUEURS = {
     'Maxime, aussi fiable que du ruban adhésif de qualité militaire.',
   ],
 };
+const ICONES = {
+  Picpic: '<span class="ico">🍺</span>',
+  Kyky: '<span class="ico">🐷</span>',
+  Guigui: '<svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><path d="M14 22c0-9 8-15 18-15s18 6 18 15v8c0 6-3 11-8 14l-3 2H25l-3-2c-5-3-8-8-8-14z" fill="#4a5a3c" stroke="#09050d" stroke-width="3"/><circle cx="23" cy="25" r="7" fill="#9fd3e6" stroke="#09050d" stroke-width="3"/><circle cx="41" cy="25" r="7" fill="#9fd3e6" stroke="#09050d" stroke-width="3"/><rect x="24" y="42" width="16" height="16" rx="5" fill="#2e3826" stroke="#09050d" stroke-width="3"/><path d="M27 48h10M27 53h10" stroke="#8a9a6c" stroke-width="2"/><path d="M14 24 6 22M50 24l8-2" stroke="#09050d" stroke-width="3" stroke-linecap="round"/></svg>',
+  'Le bouffeur de Scotch': '<svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><path d="M30 44h30l-4 10H30z" fill="#f6e3a6" stroke="#09050d" stroke-width="2.5"/><path d="M56 44l2 2-2 2 2 2-2 2" fill="none" stroke="#09050d" stroke-width="1.5"/><circle cx="28" cy="30" r="22" fill="#e8c35c" stroke="#09050d" stroke-width="3"/><circle cx="28" cy="30" r="16" fill="none" stroke="#c99a2e" stroke-width="2"/><circle cx="28" cy="30" r="9" fill="#a5773a" stroke="#09050d" stroke-width="3"/><circle cx="28" cy="30" r="4" fill="#1a1225"/></svg>',
+};
 const app = document.getElementById('app');
 let partie = null;
 let joueur = null;
@@ -162,7 +169,7 @@ function choixJoueur() {
     <div class="accueil">
       <h1 class="titre">Révision OPJ</h1>
       <div class="etiq">Qui joue ?</div>
-      <div class="choix">${Object.keys(JOUEURS).map((n) => `<button class="btn ${n === joueur ? '' : 'stone'}" data-j="${echappe(n)}">${echappe(n)}</button>`).join('')}</div>
+      <div class="choix">${Object.keys(JOUEURS).map((n) => `<button class="btn ${n === joueur ? '' : 'stone'}" data-j="${echappe(n)}" style="flex-direction:row;justify-content:flex-start;gap:14px;padding-left:22px;font-size:18px">${ICONES[n]}${echappe(n)}</button>`).join('')}</div>
     </div>`;
   app.querySelectorAll('[data-j]').forEach((b) => (b.onclick = () => {
     joueur = b.dataset.j;
@@ -181,7 +188,7 @@ function accueil() {
   app.innerHTML = `
     <div class="accueil">
       <h1 class="titre">Révision OPJ</h1>
-      <button class="btn stone" id="joueur" style="align-self:center;padding:8px 16px;font-size:14px">${echappe(joueur || 'Choisir un joueur')} · changer</button>
+      <button class="btn stone" id="joueur" style="align-self:center;padding:8px 16px;font-size:14px">${ICONES[joueur] || ''}${echappe(joueur || 'Choisir un joueur')} · changer</button>
       <p class="sous">${compte()} questions pour réviser l'examen d'officier de police judiciaire.<br>Une explication après chaque réponse.</p>
       <div class="etiq">Questions par partie</div>
       <div class="longueur">${[10, 20, 40].map((n) => `<button class="btn ${n === longueur ? '' : 'stone'}" data-n="${n}">${n}</button>`).join('')}</div>
