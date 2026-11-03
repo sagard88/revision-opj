@@ -90,8 +90,83 @@ const THEMES = {
   PP: 'Procédure pénale',
   CRT: 'Compte-rendu et méthodologie',
 };
+const JOUEURS = {
+  Picpic: [
+    'Bonne réponse, Picpic ! Celle-là, elle mérite une tournée.',
+    'Santé, Picpic ! Tu réponds mieux qu\'un éthylomètre bien étalonné.',
+    'Picpic, c\'est carré. Pas besoin de souffler dans le ballon : tu es à jeun de toute erreur.',
+    'Bien vu, Picpic ! Le Code pénal, tu le connais comme ta carte des vins.',
+    'Picpic en pleine forme ! Taux de bonnes réponses : bien au-dessus de 0,40 mg/l.',
+    'Excellent, Picpic ! On trinque, mais avec modération : il reste des questions.',
+    'Picpic, tu tiens la route mieux que tu ne tiens l\'apéro.',
+    'Parfait, Picpic ! Cette réponse, c\'est un grand cru.',
+    'Picpic régale ! À ce rythme, c\'est le jury qui va avoir besoin d\'un remontant.',
+    'Picpic, sobre et efficace. Enfin, au moins pour la réponse.',
+    'Joli, Picpic ! Une bonne réponse, ça se fête… avec la suivante.',
+    'Picpic, même pas besoin de dégriser : tu es déjà OPJ dans l\'âme.',
+  ],
+  Kyky: [
+    'Bravo Kyky ! Réponse aussi bien garnie que le frigo de la popote.',
+    'Kyky, c\'est validé ! Tu remplis les cases comme tu remplis le frigo : à fond.',
+    'Bien joué Kyky ! Le popotier du savoir a encore frappé.',
+    'Kyky, chef ! Cette réponse, c\'est un plat du jour cinq étoiles.',
+    'Excellent Kyky ! Ni rupture de stock, ni rupture de neurones.',
+    'Kyky régale la brigade ! Le Code pénal, c\'est ta liste de courses.',
+    'Kyky, impeccable ! Tu mérites la dernière part de la popote.',
+    'Bonne réponse Kyky ! Le frigo est plein, la tête aussi.',
+    'Kyky, le seul qui sache réciter l\'article 53 en faisant les courses.',
+    'Parfait Kyky ! Ta réponse est au frais et prête à servir le jour de l\'examen.',
+    'Kyky, cuisson parfaite : la réponse sort pile à point.',
+    'Bien vu Kyky ! Grâce à toi, ni le frigo ni le dossier ne sont vides.',
+  ],
+  Guigui: [
+    'Bravo Guigui ! Une bonne réponse de plus… tu les comptes comme tes grenades ?',
+    'Guigui, dans le mille ! Effet lacrymogène garanti sur le jury.',
+    'Bien joué Guigui ! Inventaire à jour : une bonne réponse, zéro grenade perdue.',
+    'Guigui, précis comme un comptage de lacrymos en fin de service.',
+    'Excellent Guigui ! Tu fais pleurer les correcteurs, et sans gaz.',
+    'Guigui, réponse validée ! On ajoute une ligne au registre.',
+    'Guigui ne rate rien : ni une question, ni une grenade dans le stock.',
+    'Parfait Guigui ! Le maintien de l\'ordre juridique, c\'est toi.',
+    'Guigui, c\'est propre ! Une, deux, trois bonnes réponses… tu sais compter, on le sait.',
+    'Bonne réponse Guigui ! Le nuage de doute s\'est dissipé.',
+    'Guigui, tir tendu, en plein dans la bonne réponse.',
+    'Bien vu Guigui ! Stock de connaissances : complet, vérifié, signé.',
+  ],
+  'Le bouffeur de Scotch': [
+    'Bravo Maxime ! Cette réponse, elle colle parfaitement.',
+    'Bien joué, bouffeur de Scotch ! Ta mémoire adhère mieux que ton petit-déjeuner.',
+    'Maxime, c\'est collé-serré avec le Code pénal !',
+    'Excellent Maxime ! Une bonne réponse, ça se fête avec un rouleau de Scotch.',
+    'Le bouffeur de Scotch frappe encore ! Réponse validée, rouleau entamé.',
+    'Maxime, réponse impeccable. Aucun morceau de Scotch n\'a été blessé.',
+    'Bien vu Maxime ! Tu as les articles collés dans la tête.',
+    'Maxime, c\'est du solide, c\'est du double face !',
+    'Parfait, bouffeur de Scotch ! Tu retiens tout, rien ne se décolle.',
+    'Maxime régale ! Le jury va rester scotché.',
+    'Bonne réponse Maxime ! On te garde un rouleau en récompense.',
+    'Maxime, aussi fiable que du ruban adhésif de qualité militaire.',
+  ],
+};
 const app = document.getElementById('app');
 let partie = null;
+let joueur = null;
+try { joueur = localStorage.getItem('rev-joueur'); } catch (e) {}
+const tire = (a) => a[Math.floor(Math.random() * a.length)];
+
+function choixJoueur() {
+  app.innerHTML = `
+    <div class="accueil">
+      <h1 class="titre">Révision OPJ</h1>
+      <div class="etiq">Qui joue ?</div>
+      <div class="choix">${Object.keys(JOUEURS).map((n) => `<button class="btn ${n === joueur ? '' : 'stone'}" data-j="${echappe(n)}">${echappe(n)}</button>`).join('')}</div>
+    </div>`;
+  app.querySelectorAll('[data-j]').forEach((b) => (b.onclick = () => {
+    joueur = b.dataset.j;
+    try { localStorage.setItem('rev-joueur', joueur); } catch (e) {}
+    accueil();
+  }));
+}
 let longueur = 20;
 try { longueur = +localStorage.getItem('rev-longueur') || 20; } catch (e) {}
 
@@ -103,6 +178,7 @@ function accueil() {
   app.innerHTML = `
     <div class="accueil">
       <h1 class="titre">Révision OPJ</h1>
+      <button class="btn stone" id="joueur" style="align-self:center;padding:8px 16px;font-size:14px">${echappe(joueur || 'Choisir un joueur')} · changer</button>
       <p class="sous">${compte()} questions pour réviser l'examen d'officier de police judiciaire.<br>Une explication après chaque réponse.</p>
       <div class="etiq">Questions par partie</div>
       <div class="longueur">${[10, 20, 40].map((n) => `<button class="btn ${n === longueur ? '' : 'stone'}" data-n="${n}">${n}</button>`).join('')}</div>
@@ -114,6 +190,7 @@ function accueil() {
     </div>`;
   app.querySelectorAll('[data-n]').forEach((b) => (b.onclick = () => { longueur = +b.dataset.n; try { localStorage.setItem('rev-longueur', longueur); } catch (e) {} accueil(); }));
   app.querySelectorAll('[data-t]').forEach((b) => (b.onclick = () => commencer(b.dataset.t)));
+  app.querySelector('#joueur').onclick = choixJoueur;
 }
 
 function commencer(theme) {
@@ -167,7 +244,8 @@ function question() {
       else x.classList.add('stone', 'dim');
     });
     const zone = app.querySelector('.expli');
-    zone.querySelector('p').textContent = (c.ok ? 'Bonne réponse. ' : 'Raté. ') + (expli || '');
+    const titre = c.ok ? (JOUEURS[joueur] ? tire(JOUEURS[joueur]) : 'Bonne réponse.') : 'Raté.';
+    zone.querySelector('p').innerHTML = `<strong style="color:${c.ok ? '#8fe08f' : '#ff9a90'}">${echappe(titre)}</strong><br>${echappe(expli || '')}`;
     zone.classList.remove('cache');
     app.querySelector('.compteur:last-child').textContent = '✔ ' + partie.bons;
   }));
@@ -191,7 +269,7 @@ function fin() {
   app.querySelector('#menu').onclick = accueil;
 }
 
-accueil();
+choixJoueur();
 </script>
 </body>
 </html>
